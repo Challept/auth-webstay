@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logga in</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #001f3f, #002244);
+            color: #fff;
+            text-align: center;
+        }
+
+        .container {
+            padding: 50px;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        input {
+            display: block;
+            margin: 10px auto;
+            padding: 10px;
+            width: 80%;
+            max-width: 300px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #0056b3;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #003f7f;
+        }
+
+        .button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #0056b3;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #003f7f;
+        }
+
+        .error {
+            color: #ff4c4c;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Logga in eller Registrera</h1>
+        {% if fel %}
+            <p class="error">{{ fel }}</p>
+        {% endif %}
+        <form method="POST">
+            <label for="email">E-post:</label>
+            <input type="email" id="email" name="email" required>
+            <label for="losenord">Lösenord:</label>
+            <input type="password" id="losenord" name="losenord" required>
+            <button type="submit" name="login">Logga in</button>
+            <button type="submit" name="register">Registrera</button>
+        </form>
+        <a href="/google_login" class="button">Logga in med Google</a>
+    </div>
+    <script>
+        console.log("Logga in-sida laddad!");
+    </script>
+</body>
+</html>
