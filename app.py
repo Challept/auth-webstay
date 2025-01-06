@@ -1,34 +1,28 @@
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify
+import os
+from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
-from flask_jwt_extended import JWTManager, create_access_token
+from flask_jwt_extended import JWTManager
 from werkzeug.security import generate_password_hash, check_password_hash
 from oauthlib.oauth2 import WebApplicationClient
 import requests
-import os
 
 # Flask Application Setup
 app = Flask(__name__)
 
-# Application Configuration
-app.secret_key = os.getenv("SECRET_KEY", "cd7eb35468a7e939628b776014a1c033")  # Default fallback for local dev
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL", "sqlite:///användare.db").replace("postgres://", "postgresql://")  # Handle Render's PostgreSQL
-app.config["JWT_SECRET_KEY"] = os.getenv(
-    "JWT_SECRET_KEY", "c2e10cf127bc826f09fdf0bada9125f081b54c798d5ce1b2888f974a6092d05a"
+# Environment Configuration
+app.secret_key = os.getenv("SECRET_KEY")
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv(
+    "DATABASE_URL", "sqlite:///användare.db"
 )
+app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
 
 # Initialize Extensions
 db = SQLAlchemy(app)
 jwt = JWTManager(app)
 
 # Google OAuth2 Configuration
-GOOGLE_CLIENT_ID = os.getenv(
-    "GOOGLE_CLIENT_ID",
-    "216513476074-2g3ua2sboin4g8f16n8mdf9o2h1tbn0q.apps.googleusercontent.com"
-)
-GOOGLE_CLIENT_SECRET = os.getenv(
-    "GOOGLE_CLIENT_SECRET",
-    "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"
-)
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 GOOGLE_DISCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration"
 
 client = WebApplicationClient(GOOGLE_CLIENT_ID)
@@ -70,7 +64,7 @@ def loggain():
                     return render_template("loggain.html", fel="Fel e-post eller lösenord.")
         return render_template("loggain.html")
     except Exception as e:
-        print(f"Error in /loggain: {e}")
+        print(f"Error in /loggain: {e}")  # Log the error in Render Logs
         return render_template("loggain.html", fel="Ett fel inträffade, försök igen senare.")
 
 @app.route("/logout")
@@ -83,7 +77,7 @@ def google_login():
     try:
         google_provider_cfg = requests.get(GOOGLE_DISCOVERY_URL).json()
         authorization_endpoint = google_provider_cfg["authorization_endpoint"]
-        redirect_uri = request.host_url.rstrip("/") + "/google_callback"
+        redirect_uri = request.url_root + "google_callback"
         request_uri = client.prepare_request_uri(
             authorization_endpoint,
             redirect_uri=redirect_uri,
@@ -100,7 +94,7 @@ def google_callback():
         code = request.args.get("code")
         google_provider_cfg = requests.get(GOOGLE_DISCOVERY_URL).json()
         token_endpoint = google_provider_cfg["token_endpoint"]
-        redirect_uri = request.host_url.rstrip("/") + "/google_callback"
+        redirect_uri = request.url_root + "google_callback"
         token_url, headers, body = client.prepare_token_request(
             token_endpoint,
             authorization_response=request.url,
@@ -135,4 +129,4 @@ def google_callback():
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=True)
+    app.run(host="0.0.0.0", port=5000)
