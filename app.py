@@ -11,7 +11,7 @@ app = Flask(__name__)
 
 # Application Configuration
 app.secret_key = os.getenv("SECRET_KEY", "cd7eb35468a7e939628b776014a1c033")  # Default fallback for local dev
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///användare.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL", "sqlite:///användare.db").replace("postgres://", "postgresql://")  # Handle Render's PostgreSQL
 app.config["JWT_SECRET_KEY"] = os.getenv(
     "JWT_SECRET_KEY", "c2e10cf127bc826f09fdf0bada9125f081b54c798d5ce1b2888f974a6092d05a"
 )
@@ -37,7 +37,7 @@ client = WebApplicationClient(GOOGLE_CLIENT_ID)
 class Anvandare(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    losenord = db.Column(db.String(200), nullable=False)
+    losenord = db.Column(db.String(200), nullable=True)
 
 # Routes
 @app.route("/")
@@ -47,29 +47,31 @@ def index():
 
 @app.route("/loggain", methods=["GET", "POST"])
 def loggain():
-    if request.method == "POST":
-        if "register" in request.form:
+    try:
+        if request.method == "POST":
             email = request.form.get("email")
             losenord = request.form.get("losenord")
-            existing_user = Anvandare.query.filter_by(email=email).first()
-            if not existing_user:
-                hashed_password = generate_password_hash(losenord)
-                ny_anvandare = Anvandare(email=email, losenord=hashed_password)
-                db.session.add(ny_anvandare)
-                db.session.commit()
-                return redirect(url_for("index"))
-            else:
-                return render_template("loggain.html", fel="E-post finns redan.")
-        elif "login" in request.form:
-            email = request.form.get("email")
-            losenord = request.form.get("losenord")
-            anvandare = Anvandare.query.filter_by(email=email).first()
-            if anvandare and check_password_hash(anvandare.losenord, losenord):
-                session["user_email"] = email
-                return redirect(url_for("index"))
-            else:
-                return render_template("loggain.html", fel="Fel e-post eller lösenord.")
-    return render_template("loggain.html")
+            if "register" in request.form:
+                existing_user = Anvandare.query.filter_by(email=email).first()
+                if not existing_user:
+                    hashed_password = generate_password_hash(losenord)
+                    ny_anvandare = Anvandare(email=email, losenord=hashed_password)
+                    db.session.add(ny_anvandare)
+                    db.session.commit()
+                    return redirect(url_for("index"))
+                else:
+                    return render_template("loggain.html", fel="E-post finns redan.")
+            elif "login" in request.form:
+                anvandare = Anvandare.query.filter_by(email=email).first()
+                if anvandare and check_password_hash(anvandare.losenord, losenord):
+                    session["user_email"] = email
+                    return redirect(url_for("index"))
+                else:
+                    return render_template("loggain.html", fel="Fel e-post eller lösenord.")
+        return render_template("loggain.html")
+    except Exception as e:
+        print(f"Error in /loggain: {e}")
+        return render_template("loggain.html", fel="Ett fel inträffade, försök igen senare.")
 
 @app.route("/logout")
 def logout():
@@ -78,51 +80,59 @@ def logout():
 
 @app.route("/google_login")
 def google_login():
-    google_provider_cfg = requests.get(GOOGLE_DISCOVERY_URL).json()
-    authorization_endpoint = google_provider_cfg["authorization_endpoint"]
-    redirect_uri = request.host_url.rstrip("/") + "/google_callback"
-    request_uri = client.prepare_request_uri(
-        authorization_endpoint,
-        redirect_uri=redirect_uri,
-        scope=["openid", "email", "profile"],
-    )
-    return redirect(request_uri)
+    try:
+        google_provider_cfg = requests.get(GOOGLE_DISCOVERY_URL).json()
+        authorization_endpoint = google_provider_cfg["authorization_endpoint"]
+        redirect_uri = request.host_url.rstrip("/") + "/google_callback"
+        request_uri = client.prepare_request_uri(
+            authorization_endpoint,
+            redirect_uri=redirect_uri,
+            scope=["openid", "email", "profile"],
+        )
+        return redirect(request_uri)
+    except Exception as e:
+        print(f"Error in /google_login: {e}")
+        return redirect(url_for("loggain"))
 
 @app.route("/google_callback")
 def google_callback():
-    code = request.args.get("code")
-    google_provider_cfg = requests.get(GOOGLE_DISCOVERY_URL).json()
-    token_endpoint = google_provider_cfg["token_endpoint"]
-    redirect_uri = request.host_url.rstrip("/") + "/google_callback"
-    token_url, headers, body = client.prepare_token_request(
-        token_endpoint,
-        authorization_response=request.url,
-        redirect_url=redirect_uri,
-        code=code,
-    )
-    token_response = requests.post(
-        token_url,
-        headers=headers,
-        data=body,
-        auth=(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET),
-    )
-    client.parse_request_body_response(token_response.text)
-    userinfo_endpoint = google_provider_cfg["userinfo_endpoint"]
-    uri, headers, body = client.add_token(userinfo_endpoint)
-    userinfo_response = requests.get(uri, headers=headers, data=body)
-    användardata = userinfo_response.json()
-    email = användardata["email"]
+    try:
+        code = request.args.get("code")
+        google_provider_cfg = requests.get(GOOGLE_DISCOVERY_URL).json()
+        token_endpoint = google_provider_cfg["token_endpoint"]
+        redirect_uri = request.host_url.rstrip("/") + "/google_callback"
+        token_url, headers, body = client.prepare_token_request(
+            token_endpoint,
+            authorization_response=request.url,
+            redirect_url=redirect_uri,
+            code=code,
+        )
+        token_response = requests.post(
+            token_url,
+            headers=headers,
+            data=body,
+            auth=(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET),
+        )
+        client.parse_request_body_response(token_response.text)
+        userinfo_endpoint = google_provider_cfg["userinfo_endpoint"]
+        uri, headers, body = client.add_token(userinfo_endpoint)
+        userinfo_response = requests.get(uri, headers=headers, data=body)
+        användardata = userinfo_response.json()
+        email = användardata["email"]
 
-    # Save user in the database if they don't exist
-    if not Anvandare.query.filter_by(email=email).first():
-        ny_anvandare = Anvandare(email=email, losenord="")
-        db.session.add(ny_anvandare)
-        db.session.commit()
+        # Save user in the database if they don't exist
+        if not Anvandare.query.filter_by(email=email).first():
+            ny_anvandare = Anvandare(email=email, losenord=None)
+            db.session.add(ny_anvandare)
+            db.session.commit()
 
-    session["user_email"] = email
-    return redirect(url_for("index"))
+        session["user_email"] = email
+        return redirect(url_for("index"))
+    except Exception as e:
+        print(f"Error in /google_callback: {e}")
+        return redirect(url_for("loggain"))
 
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=True)
