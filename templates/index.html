@@ -5,151 +5,153 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Logga in med Google | Webstay Auth</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
     :root {
-      --background: #1a1a2e;
-      --color: #ffffff;
-      --primary-color: #0f3460;
+      --background: linear-gradient(135deg, #141e30, #243b55);
+      --btn-bg: #f5f5f5;
+      --btn-hover: #d4d4d4;
+      --text-color: #ffffff;
+      --btn-text: #333;
+      --highlight-color: #ff6f61;
     }
 
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: "Poppins", sans-serif;
+      font-family: 'Roboto', sans-serif;
     }
 
     body {
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
       background: var(--background);
-      color: var(--color);
-      transition: background 0.2s ease;
+      color: var(--text-color);
+      overflow: hidden;
     }
 
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-      width: 300px;
+    .login-wrapper {
+      width: 350px;
       text-align: center;
-    }
-
-    .form-container {
-      padding: 2rem;
-      border-radius: 10px;
       background: rgba(255, 255, 255, 0.1);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     }
 
-    h1 {
+    .login-wrapper h1 {
       font-size: 2rem;
-      margin-bottom: 1rem;
-      color: var(--color);
+      margin-bottom: 1.5rem;
+      font-weight: bold;
+      color: var(--text-color);
     }
 
     .btn {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.5rem;
-      background: #ffffff;
-      color: #000;
-      padding: 10px 15px;
-      border-radius: 5px;
-      text-decoration: none;
-      font-weight: bold;
-      cursor: pointer;
-      border: none;
-      transition: transform 0.3s ease;
+      gap: 0.8rem;
+      background: var(--btn-bg);
+      color: var(--btn-text);
       font-size: 1rem;
+      font-weight: 500;
+      padding: 0.8rem 1.5rem;
+      border-radius: 25px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 1rem;
+      border: 1px solid var(--btn-bg);
     }
 
     .btn img {
-      width: 20px;
+      width: 24px;
     }
 
     .btn:hover {
+      background: var(--btn-hover);
       transform: scale(1.05);
     }
 
     .create-btn {
-      background: #0f3460;
-      color: #fff;
+      background: transparent;
+      color: var(--text-color);
+      border: 1px solid var(--text-color);
     }
 
     .create-btn:hover {
-      background: #3b82f6;
+      background: var(--highlight-color);
+      color: #fff;
+      transform: scale(1.05);
     }
 
-    .theme-btn-container {
-      display: flex;
-      gap: 5px;
-      margin-top: 2rem;
+    .illustration {
+      margin-bottom: 1.5rem;
+      width: 100%;
+      max-width: 150px;
     }
 
-    .theme-btn {
-      width: 25px;
-      height: 25px;
+    .floating-circles {
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      background: var(--highlight-color);
       border-radius: 50%;
-      cursor: pointer;
-      transition: transform 0.3s ease;
+      filter: blur(100px);
+      animation: float 6s infinite ease-in-out;
     }
 
-    .theme-btn:hover {
-      transform: scale(1.2);
+    .floating-circles:nth-child(2) {
+      width: 120px;
+      height: 120px;
+      top: 20%;
+      left: 80%;
+      animation-delay: 2s;
+      background: #61dafb;
+    }
+
+    .floating-circles:nth-child(3) {
+      width: 200px;
+      height: 200px;
+      bottom: 10%;
+      left: 10%;
+      animation-delay: 4s;
+      background: #f9a825;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-20px);
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="form-container">
-      <h1>Logga in</h1>
-      <button class="btn" id="googleLogin">
-        <img src="https://pluspng.com/img-png/google-logo-png-open-2000.png" alt="Google">
-        Logga in med Google
-      </button>
-      <button class="btn create-btn" id="createGoogleAccount">
-        Skapa ett Google-konto
-      </button>
-    </div>
-    <div class="theme-btn-container"></div>
+  <div class="floating-circles"></div>
+  <div class="floating-circles"></div>
+  <div class="floating-circles"></div>
+
+  <div class="login-wrapper">
+    <img src="https://raw.githubusercontent.com/hicodersofficial/glassmorphism-login-form/master/assets/illustration.png" alt="Illustration" class="illustration">
+    <h1>Välkommen</h1>
+    <button class="btn" id="googleLogin">
+      <img src="https://pluspng.com/img-png/google-logo-png-open-2000.png" alt="Google">
+      Logga in med Google
+    </button>
+    <button class="btn create-btn" id="createGoogleAccount">
+      <img src="https://pluspng.com/img-png/google-logo-png-open-2000.png" alt="Google">
+      Skapa ett Google-konto
+    </button>
   </div>
 
   <script>
-    const themes = [
-      { background: "#1A1A2E", color: "#FFFFFF", primaryColor: "#0F3460" },
-      { background: "#461220", color: "#FFFFFF", primaryColor: "#E94560" },
-      { background: "#192A51", color: "#FFFFFF", primaryColor: "#967AA1" },
-      { background: "#F7B267", color: "#000000", primaryColor: "#F4845F" },
-      { background: "#F25F5C", color: "#000000", primaryColor: "#642B36" },
-      { background: "#231F20", color: "#FFF", primaryColor: "#BB4430" },
-    ];
-
-    const setTheme = (theme) => {
-      const root = document.documentElement;
-      root.style.setProperty("--background", theme.background);
-      root.style.setProperty("--color", theme.color);
-      root.style.setProperty("--primary-color", theme.primaryColor);
-    };
-
-    const displayThemeButtons = () => {
-      const btnContainer = document.querySelector(".theme-btn-container");
-      themes.forEach((theme) => {
-        const div = document.createElement("div");
-        div.className = "theme-btn";
-        div.style.background = theme.primaryColor;
-        btnContainer.appendChild(div);
-        div.addEventListener("click", () => setTheme(theme));
-      });
-    };
-
-    displayThemeButtons();
-
     // Handle Google Login
     document.getElementById("googleLogin").addEventListener("click", () => {
       window.location.href = "/google_login";
