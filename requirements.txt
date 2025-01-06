@@ -1,6 +1,6 @@
 flask
 flask-sqlalchemy
-flask-mail
 flask-jwt-extended
-google-auth-oauthlib
+oauthlib
+requests
 gunicorn
