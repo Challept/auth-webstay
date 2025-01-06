@@ -17,6 +17,8 @@
       --google-text: #000000;
       --shadow-color: rgba(0, 0, 0, 0.5);
       --card-border: rgba(255, 255, 255, 0.1);
+      --badge-color: #2a9d8f;
+      --badge-text: #ffffff;
     }
 
     * {
@@ -99,23 +101,53 @@
       text-decoration: underline;
     }
 
-    .additional-section {
+    .security-badges {
       margin-top: 20px;
-      font-size: 0.95rem;
+      text-align: center;
+    }
+
+    .security-badges p {
+      font-size: 0.9rem;
+      margin-bottom: 10px;
       color: var(--text-color);
     }
 
-    .additional-section p {
-      margin-bottom: 10px;
+    .security-badges .badges {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
     }
 
-    .additional-section a {
-      color: var(--hover-color);
-      text-decoration: none;
+    .security-badges img {
+      width: 50px;
+      height: 50px;
+      transition: transform 0.3s ease;
     }
 
-    .additional-section a:hover {
-      text-decoration: underline;
+    .security-badges img:hover {
+      transform: scale(1.1);
+    }
+
+    .animated-visuals {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .animated-visuals .block {
+      width: 20px;
+      height: 20px;
+      background: var(--badge-color);
+      animation: bounce 1.5s infinite;
+    }
+
+    .animated-visuals .block:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .animated-visuals .block:nth-child(3) {
+      animation-delay: 0.4s;
     }
 
     @keyframes fadeIn {
@@ -126,6 +158,15 @@
       to {
         opacity: 1;
         transform: translateY(0);
+      }
+    }
+
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-15px);
       }
     }
   </style>
@@ -141,11 +182,21 @@
       <img src="https://pluspng.com/img-png/google-logo-png-open-2000.png" alt="Google">
       Skapa ett Google-konto
     </button>
+    <div class="security-badges">
+      <p>Vi värnar om din säkerhet:</p>
+      <div class="badges">
+        <img src="https://via.placeholder.com/50x50?text=SSL" alt="SSL Secured">
+        <img src="https://via.placeholder.com/50x50?text=GDPR" alt="GDPR Compliant">
+        <img src="https://via.placeholder.com/50x50?text=OAuth" alt="OAuth Secured">
+      </div>
+    </div>
+    <div class="animated-visuals">
+      <div class="block"></div>
+      <div class="block"></div>
+      <div class="block"></div>
+    </div>
     <div class="footer">
       <p>Har du problem? <a href="mailto:support@webstay.se">Kontakta support</a>.</p>
-    </div>
-    <div class="additional-section">
-      <p>Läs mer om våra <a href="#">användarvillkor</a> och <a href="#">integritetspolicy</a>.</p>
     </div>
   </div>
 </body>
