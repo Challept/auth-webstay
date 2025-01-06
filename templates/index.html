@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Webstay | Logga in</title>
+  <title>Logga in | Webstay Auth</title>
   <style>
-    @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@200;300;400;500;600;700&display=swap");
+    @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap");
 
     * {
       margin: 0;
@@ -21,7 +21,7 @@
       min-height: 100vh;
       width: 100%;
       padding: 0 10px;
-      background: linear-gradient(135deg, #1e3a8a, #2563eb, #60a5fa);
+      background: linear-gradient(135deg, #1e3a8a, #3b82f6);
     }
 
     .wrapper {
@@ -29,28 +29,22 @@
       border-radius: 10px;
       padding: 30px;
       text-align: center;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
       background: rgba(255, 255, 255, 0.1);
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     }
 
     h2 {
-      font-size: 2rem;
-      margin-bottom: 20px;
+      font-size: 1.8rem;
       color: #fff;
+      margin-bottom: 20px;
     }
 
     .input-field {
       position: relative;
-      border-bottom: 2px solid #ccc;
-      margin: 10px 0;
+      margin: 15px 0;
     }
 
     .input-field label {
@@ -58,10 +52,10 @@
       top: 50%;
       left: 0;
       transform: translateY(-50%);
-      color: #fff;
+      color: #ccc;
       font-size: 16px;
       pointer-events: none;
-      transition: 0.15s ease;
+      transition: 0.3s;
     }
 
     .input-field input {
@@ -69,127 +63,156 @@
       height: 40px;
       background: transparent;
       border: none;
+      border-bottom: 2px solid #ccc;
       outline: none;
+      color: #fff;
       font-size: 16px;
-      color: #fff;
+      transition: 0.3s;
     }
 
-    .input-field input:focus ~ label,
-    .input-field input:valid ~ label {
-      font-size: 0.8rem;
+    .input-field input:focus,
+    .input-field input:valid {
+      border-bottom: 2px solid #3b82f6;
+    }
+
+    .input-field input:focus~label,
+    .input-field input:valid~label {
       top: 10px;
-      transform: translateY(-120%);
-    }
-
-    .forget {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin: 20px 0;
-      color: #fff;
-    }
-
-    #remember {
-      accent-color: #fff;
-    }
-
-    .forget label {
-      display: flex;
-      align-items: center;
-    }
-
-    .forget label p {
-      margin-left: 8px;
-    }
-
-    .wrapper a {
-      color: #bbe3fa;
-      text-decoration: none;
-    }
-
-    .wrapper a:hover {
-      text-decoration: underline;
+      font-size: 12px;
+      color: #3b82f6;
     }
 
     button {
-      background: #2563eb;
+      background: #3b82f6;
       color: #fff;
-      font-weight: 600;
+      font-size: 16px;
       border: none;
-      padding: 12px 20px;
+      padding: 10px 20px;
       cursor: pointer;
       border-radius: 5px;
-      font-size: 16px;
-      transition: 0.3s ease;
+      margin-top: 20px;
+      width: 100%;
+      transition: 0.3s;
     }
 
     button:hover {
-      background: #1e3a8a;
+      background: #2563eb;
     }
 
-    .register {
+    .google-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      color: #000;
+      margin-top: 10px;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .google-btn img {
+      width: 20px;
+      margin-right: 10px;
+    }
+
+    .alert {
+      display: none;
+      margin: 20px 0;
+      padding: 10px;
+      border-radius: 5px;
       text-align: center;
-      margin-top: 20px;
+    }
+
+    .alert.success {
+      background-color: #22c55e;
       color: #fff;
     }
 
-    .hidden {
-      display: none;
+    .alert.error {
+      background-color: #ef4444;
+      color: #fff;
     }
   </style>
 </head>
 <body>
   <div class="wrapper">
-    <form id="login-form" method="POST" action="/loggain">
-      <h2>Logga in</h2>
+    <h2>Logga in</h2>
+    <div class="alert" id="alert"></div>
+    <form id="authForm">
       <div class="input-field">
-        <input type="email" name="email" required>
-        <label>Ange din e-post</label>
-      </div>
-      <div class="input-field">
-        <input type="password" name="losenord" required>
-        <label>Ange ditt lösenord</label>
-      </div>
-      <div class="forget">
-        <label for="remember">
-          <input type="checkbox" id="remember">
-          <p>Kom ihåg mig</p>
-        </label>
-        <a href="#">Glömt lösenord?</a>
-      </div>
-      <button type="submit" name="login">Logga in</button>
-      <div class="register">
-        <p>Har du inget konto? <a href="#" onclick="switchToRegister()">Registrera</a></p>
-      </div>
-    </form>
-
-    <form id="register-form" class="hidden" method="POST" action="/loggain">
-      <h2>Registrera</h2>
-      <div class="input-field">
-        <input type="email" name="email" required>
-        <label>Ange din e-post</label>
+        <input type="email" id="email" required>
+        <label>E-post</label>
       </div>
       <div class="input-field">
-        <input type="password" name="losenord" required>
-        <label>Skapa ett lösenord</label>
+        <input type="password" id="password" required>
+        <label>Lösenord</label>
       </div>
-      <button type="submit" name="register">Registrera</button>
-      <div class="register">
-        <p>Har du redan ett konto? <a href="#" onclick="switchToLogin()">Logga in</a></p>
+      <button type="submit" id="loginBtn">Logga in</button>
+      <button type="button" id="registerBtn">Registrera</button>
+      <div class="google-btn" id="googleLoginBtn">
+        <img src="https://pluspng.com/img-png/google-logo-png-open-2000.png" alt="Google">
+        Logga in med Google
       </div>
     </form>
   </div>
 
   <script>
-    function switchToRegister() {
-      document.getElementById('login-form').classList.add('hidden');
-      document.getElementById('register-form').classList.remove('hidden');
-    }
+    document.addEventListener("DOMContentLoaded", () => {
+      const authForm = document.getElementById("authForm");
+      const alertBox = document.getElementById("alert");
+      const loginBtn = document.getElementById("loginBtn");
+      const registerBtn = document.getElementById("registerBtn");
+      const googleLoginBtn = document.getElementById("googleLoginBtn");
 
-    function switchToLogin() {
-      document.getElementById('register-form').classList.add('hidden');
-      document.getElementById('login-form').classList.remove('hidden');
-    }
+      // Handle Login and Registration
+      authForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const action = e.submitter.id === "loginBtn" ? "login" : "register";
+
+        try {
+          const response = await fetch("/loggain", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email, losenord: password, action }),
+          });
+
+          const result = await response.json();
+          if (result.success) {
+            alertBox.textContent = result.message;
+            alertBox.className = "alert success";
+            alertBox.style.display = "block";
+
+            // Store in localStorage
+            localStorage.setItem("user", JSON.stringify(result.user));
+            console.log("User logged in:", result.user);
+
+            // Redirect to previous page or default
+            const redirectUrl = document.referrer || "/";
+            setTimeout(() => {
+              window.location.href = redirectUrl;
+            }, 2000);
+          } else {
+            throw new Error(result.message);
+          }
+        } catch (error) {
+          alertBox.textContent = error.message;
+          alertBox.className = "alert error";
+          alertBox.style.display = "block";
+          console.error("Error:", error);
+        }
+      });
+
+      // Google Login
+      googleLoginBtn.addEventListener("click", () => {
+        window.location.href = "/google_login";
+      });
+    });
   </script>
 </body>
 </html>
