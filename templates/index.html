@@ -5,131 +5,159 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Logga in med Google | Webstay Auth</title>
   <style>
-    @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap");
+    :root {
+      --background: #1a1a2e;
+      --color: #ffffff;
+      --primary-color: #0f3460;
+    }
 
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: "Open Sans", sans-serif;
+      font-family: "Poppins", sans-serif;
     }
 
     body {
       display: flex;
-      align-items: center;
       justify-content: center;
-      min-height: 100vh;
-      width: 100%;
-      padding: 0 10px;
-      background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+      align-items: center;
+      height: 100vh;
+      background: var(--background);
+      color: var(--color);
+      transition: background 0.2s ease;
     }
 
-    .wrapper {
-      width: 400px;
-      border-radius: 10px;
-      padding: 30px;
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      width: 300px;
       text-align: center;
+    }
+
+    .form-container {
+      padding: 2rem;
+      border-radius: 10px;
       background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
       backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.3);
     }
 
-    h2 {
-      font-size: 1.8rem;
-      color: #fff;
-      margin-bottom: 20px;
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: var(--color);
     }
 
-    button {
-      background: #fff;
-      color: #000;
-      font-size: 16px;
-      border: none;
-      padding: 10px 20px;
-      cursor: pointer;
-      border-radius: 5px;
-      margin-top: 20px;
-      width: 100%;
-      transition: 0.3s;
+    .btn {
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-
-    button img {
-      width: 20px;
-      margin-right: 10px;
-    }
-
-    button:hover {
-      background: #2563eb;
-      color: #fff;
-    }
-
-    .create-account {
-      margin-top: 10px;
-      text-align: center;
-    }
-
-    .create-account a {
-      color: #fff;
+      gap: 0.5rem;
+      background: #ffffff;
+      color: #000;
+      padding: 10px 15px;
+      border-radius: 5px;
       text-decoration: none;
       font-weight: bold;
-      border-bottom: 1px solid #fff;
-      transition: 0.3s;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.3s ease;
+      font-size: 1rem;
     }
 
-    .create-account a:hover {
-      color: #3b82f6;
-      border-bottom: 1px solid #3b82f6;
+    .btn img {
+      width: 20px;
     }
 
-    .alert {
-      display: none;
-      margin: 20px 0;
-      padding: 10px;
-      border-radius: 5px;
-      text-align: center;
+    .btn:hover {
+      transform: scale(1.05);
     }
 
-    .alert.error {
-      background-color: #ef4444;
+    .create-btn {
+      background: #0f3460;
       color: #fff;
+    }
+
+    .create-btn:hover {
+      background: #3b82f6;
+    }
+
+    .theme-btn-container {
+      display: flex;
+      gap: 5px;
+      margin-top: 2rem;
+    }
+
+    .theme-btn {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .theme-btn:hover {
+      transform: scale(1.2);
     }
   </style>
 </head>
 <body>
-  <div class="wrapper">
-    <h2>Logga in med Google</h2>
-    <div class="alert error" id="alert"></div>
-    <button id="googleLoginBtn">
-      <img src="https://pluspng.com/img-png/google-logo-png-open-2000.png" alt="Google">
-      Logga in med Google
-    </button>
-    <div class="create-account">
-      <p>Har du inget Google-konto?</p>
-      <a href="https://accounts.google.com/signup" target="_blank">Skapa ett Google-konto</a>
+  <div class="container">
+    <div class="form-container">
+      <h1>Logga in</h1>
+      <button class="btn" id="googleLogin">
+        <img src="https://pluspng.com/img-png/google-logo-png-open-2000.png" alt="Google">
+        Logga in med Google
+      </button>
+      <button class="btn create-btn" id="createGoogleAccount">
+        Skapa ett Google-konto
+      </button>
     </div>
+    <div class="theme-btn-container"></div>
   </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const googleLoginBtn = document.getElementById("googleLoginBtn");
-      const alertBox = document.getElementById("alert");
+    const themes = [
+      { background: "#1A1A2E", color: "#FFFFFF", primaryColor: "#0F3460" },
+      { background: "#461220", color: "#FFFFFF", primaryColor: "#E94560" },
+      { background: "#192A51", color: "#FFFFFF", primaryColor: "#967AA1" },
+      { background: "#F7B267", color: "#000000", primaryColor: "#F4845F" },
+      { background: "#F25F5C", color: "#000000", primaryColor: "#642B36" },
+      { background: "#231F20", color: "#FFF", primaryColor: "#BB4430" },
+    ];
 
-      // Handle Google login
-      googleLoginBtn.addEventListener("click", () => {
-        try {
-          // Redirect to Google login endpoint
-          window.location.href = "/google_login";
-        } catch (error) {
-          console.error("Login error:", error);
-          alertBox.textContent = "Ett fel inträffade. Försök igen senare.";
-          alertBox.style.display = "block";
-        }
+    const setTheme = (theme) => {
+      const root = document.documentElement;
+      root.style.setProperty("--background", theme.background);
+      root.style.setProperty("--color", theme.color);
+      root.style.setProperty("--primary-color", theme.primaryColor);
+    };
+
+    const displayThemeButtons = () => {
+      const btnContainer = document.querySelector(".theme-btn-container");
+      themes.forEach((theme) => {
+        const div = document.createElement("div");
+        div.className = "theme-btn";
+        div.style.background = theme.primaryColor;
+        btnContainer.appendChild(div);
+        div.addEventListener("click", () => setTheme(theme));
       });
+    };
+
+    displayThemeButtons();
+
+    // Handle Google Login
+    document.getElementById("googleLogin").addEventListener("click", () => {
+      window.location.href = "/google_login";
+    });
+
+    // Handle Create Google Account
+    document.getElementById("createGoogleAccount").addEventListener("click", () => {
+      window.open("https://accounts.google.com/signup", "_blank");
     });
   </script>
 </body>
