@@ -3,17 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Webstay Auth | Välj Konto</title>
+  <title>Webstay Auth</title>
   <style>
     :root {
-      --background-color: #f3f9ff;
-      --primary-color: #2962ff;
-      --accent-color: #82b1ff;
-      --hover-color: #4a90e2;
-      --text-color: #37474f;
-      --button-text-color: #ffffff;
+      --background-color: #f0f8ff;
+      --primary-color: #1a73e8;
+      --accent-color: #5c9ded;
+      --hover-color: #87b3f7;
+      --text-color: #333;
+      --button-color: #ffffff;
+      --button-text: #000000;
       --card-background: #ffffff;
-      --shadow-color: rgba(0, 0, 0, 0.15);
+      --shadow-color: rgba(0, 0, 0, 0.2);
     }
 
     * {
@@ -44,14 +45,17 @@
     }
 
     h1 {
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       margin-bottom: 1rem;
-      font-weight: 700;
+      font-weight: bold;
       color: var(--primary-color);
     }
 
     .accounts {
       margin-bottom: 20px;
+      max-height: 200px;
+      overflow-y: auto;
+      padding-right: 5px;
     }
 
     .account {
@@ -93,7 +97,7 @@
       align-items: center;
       justify-content: center;
       background: var(--primary-color);
-      color: var(--button-text-color);
+      color: var(--button-color);
       border: none;
       border-radius: 10px;
       padding: 14px 20px;
@@ -112,7 +116,7 @@
     }
 
     .button img {
-      width: 24px;
+      width: 20px;
       margin-right: 10px;
     }
 
@@ -123,7 +127,7 @@
     }
 
     .footer a {
-      color: var(--primary-color);
+      color: var(--accent-color);
       text-decoration: none;
     }
 
@@ -131,22 +135,8 @@
       text-decoration: underline;
     }
 
-    .password-toggle {
-      position: relative;
-    }
-
-    .password-toggle input {
-      width: calc(100% - 40px);
-    }
-
-    .password-toggle .toggle-icon {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      cursor: pointer;
-      font-size: 1.2rem;
-      color: var(--primary-color);
+    .hidden {
+      display: none;
     }
 
     @keyframes fadeIn {
@@ -162,12 +152,18 @@
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="container" id="screen1">
     <h1>Välj ett konto</h1>
 
     <div class="accounts" id="accountsList">
-      <p id="noAccountsMessage">Inga tidigare konton hittades.</p>
+      <p id="noAccountsMessage" style="display: none;">Inga tidigare konton hittades.</p>
     </div>
+
+    <button class="button" onclick="switchToLogin()">Hittar du inte ditt konto?</button>
+  </div>
+
+  <div class="container hidden" id="screen2">
+    <h1>Logga in eller Skapa konto</h1>
 
     <button class="button" onclick="window.location.href='/google_login'">
       <img src="https://pluspng.com/img-png/google-logo-png-open-2000.png" alt="Google">
@@ -178,6 +174,8 @@
       <img src="https://pluspng.com/img-png/google-logo-png-open-2000.png" alt="Google">
       Skapa ett Google-konto
     </button>
+
+    <button class="button" onclick="switchToAccounts()">Tillbaka</button>
 
     <div class="footer">
       <p>Behöver du hjälp? <a href="mailto:support@webstay.se">Kontakta support</a>.</p>
@@ -202,6 +200,7 @@
           savedAccounts.forEach((account, index) => {
             const accountDiv = document.createElement('div');
             accountDiv.className = 'account';
+            accountDiv.onclick = () => loginWithAccount(account);
 
             const accountName = document.createElement('span');
             accountName.textContent = account.email;
@@ -209,7 +208,10 @@
             const removeButton = document.createElement('span');
             removeButton.className = 'remove';
             removeButton.textContent = 'Ta bort';
-            removeButton.onclick = () => removeAccount(index);
+            removeButton.onclick = (e) => {
+              e.stopPropagation();
+              removeAccount(index);
+            };
 
             accountDiv.appendChild(accountName);
             accountDiv.appendChild(removeButton);
@@ -224,8 +226,23 @@
         renderAccounts();
       }
 
+      function loginWithAccount(account) {
+        alert(`Loggar in med ${account.email}`);
+        // Redirect or handle login logic
+      }
+
       renderAccounts();
     });
+
+    function switchToLogin() {
+      document.getElementById('screen1').classList.add('hidden');
+      document.getElementById('screen2').classList.remove('hidden');
+    }
+
+    function switchToAccounts() {
+      document.getElementById('screen2').classList.add('hidden');
+      document.getElementById('screen1').classList.remove('hidden');
+    }
   </script>
 </body>
 </html>
