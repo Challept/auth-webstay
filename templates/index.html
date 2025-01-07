@@ -6,100 +6,90 @@
   <title>Webstay Auth | Logga in</title>
   <style>
     :root {
-      --background-color: #e3f2fd;
-      --primary-color: #1976d2;
-      --accent-color: #64b5f6;
-      --hover-color: #1565c0;
-      --text-color: #0d47a1;
-      --button-background: #42a5f5;
-      --button-hover: #1e88e5;
-      --card-color: #ffffff;
-      --shadow-color: rgba(0, 0, 0, 0.2);
-      --step-inactive: #bbdefb;
-      --step-active: #1976d2;
+      --background-color: #f4f6f8;
+      --primary-color: #2c3e50;
+      --accent-color: #2980b9;
+      --hover-color: #3498db;
+      --text-color: #2c3e50;
+      --card-background: #ffffff;
+      --shadow-color: rgba(0, 0, 0, 0.1);
     }
 
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: "Roboto", Arial, sans-serif;
+      font-family: "Roboto", sans-serif;
     }
 
     body {
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
+      height: 100vh;
       background: var(--background-color);
       color: var(--text-color);
-      animation: backgroundFade 3s infinite alternate;
-    }
-
-    @keyframes backgroundFade {
-      from {
-        background: #e3f2fd;
-      }
-      to {
-        background: #bbdefb;
-      }
     }
 
     .container {
       width: 90%;
-      max-width: 500px;
-      padding: 25px;
+      max-width: 400px;
+      padding: 20px;
       border-radius: 12px;
-      background: var(--card-color);
-      box-shadow: 0px 12px 24px var(--shadow-color);
+      background: var(--card-background);
+      box-shadow: 0px 4px 12px var(--shadow-color);
       text-align: center;
-      animation: fadeIn 1s ease-out;
     }
 
     h1 {
-      font-size: 2rem;
+      font-size: 1.8rem;
       margin-bottom: 1rem;
-      font-weight: bold;
       color: var(--primary-color);
     }
 
-    .step-container {
-      display: flex;
-      justify-content: space-between;
+    .accounts {
       margin-bottom: 20px;
     }
 
-    .step {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      background: var(--step-inactive);
+    .account {
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      color: #ffffff;
-      transition: background 0.3s ease;
+      background: var(--background-color);
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      box-shadow: 0px 2px 8px var(--shadow-color);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-    .step.active {
-      background: var(--step-active);
+    .account:hover {
+      transform: translateY(-3px);
+      box-shadow: 0px 4px 12px var(--shadow-color);
     }
 
-    .content {
-      display: none;
-      animation: fadeIn 0.3s ease-out;
+    .account img {
+      width: 24px;
+      margin-right: 10px;
     }
 
-    .content.active {
-      display: block;
+    .account .remove {
+      color: var(--accent-color);
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    .account .remove:hover {
+      color: var(--hover-color);
     }
 
     .button {
       display: flex;
       align-items: center;
       justify-content: center;
-      background: var(--button-background);
+      background: var(--accent-color);
       color: #ffffff;
       border: none;
       border-radius: 8px;
@@ -114,7 +104,7 @@
     }
 
     .button:hover {
-      background: var(--button-hover);
+      background: var(--hover-color);
       transform: translateY(-2px);
     }
 
@@ -130,54 +120,32 @@
     }
 
     .footer a {
-      color: var(--hover-color);
+      color: var(--accent-color);
       text-decoration: none;
     }
 
     .footer a:hover {
       text-decoration: underline;
     }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Välkommen till Webstay Auth</h1>
-    <div class="step-container">
-      <div class="step active">1</div>
-      <div class="step">2</div>
+
+    <div class="accounts" id="accountsList">
+      <p id="noAccountsMessage">Inga sparade konton ännu.</p>
     </div>
 
-    <div class="content active" id="step-1">
-      <p>Har du ett Google-konto? Logga in nedan:</p>
-      <button class="button" onclick="window.location.href='/google_login'">
-        <img src="https://pluspng.com/img-png/google-logo-png-open-2000.png" alt="Google">
-        Logga in med Google
-      </button>
-      <button class="button" onclick="nextStep(2)">
-        <img src="https://pluspng.com/img-png/google-logo-png-open-2000.png" alt="Google">
-        Skapa ett Google-konto
-      </button>
-    </div>
+    <button class="button" onclick="window.location.href='/google_login'">
+      <img src="https://pluspng.com/img-png/google-logo-png-open-2000.png" alt="Google">
+      Logga in med Google
+    </button>
 
-    <div class="content" id="step-2">
-      <p>Skapa ett nytt Google-konto:</p>
-      <button class="button" onclick="window.open('https://accounts.google.com/signup', '_blank')">
-        <img src="https://pluspng.com/img-png/google-logo-png-open-2000.png" alt="Google">
-        Skapa Google-konto
-      </button>
-      <button class="button" onclick="nextStep(1)">Tillbaka</button>
-    </div>
+    <button class="button" onclick="window.open('https://accounts.google.com/signup', '_blank')">
+      <img src="https://pluspng.com/img-png/google-logo-png-open-2000.png" alt="Google">
+      Skapa ett Google-konto
+    </button>
 
     <div class="footer">
       <p>Behöver du hjälp? <a href="mailto:support@webstay.se">Kontakta support</a>.</p>
@@ -185,15 +153,47 @@
   </div>
 
   <script>
-    function nextStep(step) {
-      document.querySelectorAll('.step').forEach((stepElem, index) => {
-        stepElem.classList.toggle('active', index === step - 1);
-      });
+    document.addEventListener('DOMContentLoaded', () => {
+      const accountsList = document.getElementById('accountsList');
+      const noAccountsMessage = document.getElementById('noAccountsMessage');
 
-      document.querySelectorAll('.content').forEach((contentElem, index) => {
-        contentElem.classList.toggle('active', index === step - 1);
-      });
-    }
+      const savedAccounts = JSON.parse(localStorage.getItem('webstayAccounts')) || [];
+
+      function renderAccounts() {
+        accountsList.innerHTML = '';
+
+        if (savedAccounts.length === 0) {
+          noAccountsMessage.style.display = 'block';
+        } else {
+          noAccountsMessage.style.display = 'none';
+
+          savedAccounts.forEach((account, index) => {
+            const accountDiv = document.createElement('div');
+            accountDiv.className = 'account';
+
+            const accountName = document.createElement('span');
+            accountName.textContent = account.email;
+
+            const removeButton = document.createElement('span');
+            removeButton.className = 'remove';
+            removeButton.textContent = 'Ta bort';
+            removeButton.onclick = () => removeAccount(index);
+
+            accountDiv.appendChild(accountName);
+            accountDiv.appendChild(removeButton);
+            accountsList.appendChild(accountDiv);
+          });
+        }
+      }
+
+      function removeAccount(index) {
+        savedAccounts.splice(index, 1);
+        localStorage.setItem('webstayAccounts', JSON.stringify(savedAccounts));
+        renderAccounts();
+      }
+
+      renderAccounts();
+    });
   </script>
 </body>
 </html>
