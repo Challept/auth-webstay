@@ -6,16 +6,17 @@
   <title>Webstay Auth | Logga in</title>
   <style>
     :root {
-      --background-color: #edf2fb;
-      --primary-color: #4a90e2;
-      --accent-color: #2563eb;
-      --text-color: #2d3748;
-      --button-background: #4a90e2;
-      --button-hover: #1d4ed8;
-      --step-inactive: #cbd5e1;
-      --step-active: #2563eb;
+      --background-color: #e3f2fd;
+      --primary-color: #1976d2;
+      --accent-color: #64b5f6;
+      --hover-color: #1565c0;
+      --text-color: #0d47a1;
+      --button-background: #42a5f5;
+      --button-hover: #1e88e5;
       --card-color: #ffffff;
-      --shadow-color: rgba(0, 0, 0, 0.15);
+      --shadow-color: rgba(0, 0, 0, 0.2);
+      --step-inactive: #bbdefb;
+      --step-active: #1976d2;
     }
 
     * {
@@ -32,21 +33,33 @@
       min-height: 100vh;
       background: var(--background-color);
       color: var(--text-color);
+      animation: backgroundFade 3s infinite alternate;
+    }
+
+    @keyframes backgroundFade {
+      from {
+        background: #e3f2fd;
+      }
+      to {
+        background: #bbdefb;
+      }
     }
 
     .container {
       width: 90%;
-      max-width: 480px;
-      padding: 20px;
+      max-width: 500px;
+      padding: 25px;
       border-radius: 12px;
       background: var(--card-color);
-      box-shadow: 0px 10px 20px var(--shadow-color);
+      box-shadow: 0px 12px 24px var(--shadow-color);
       text-align: center;
+      animation: fadeIn 1s ease-out;
     }
 
     h1 {
       font-size: 2rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
+      font-weight: bold;
       color: var(--primary-color);
     }
 
@@ -65,7 +78,8 @@
       align-items: center;
       justify-content: center;
       font-weight: bold;
-      color: white;
+      color: #ffffff;
+      transition: background 0.3s ease;
     }
 
     .step.active {
@@ -91,11 +105,12 @@
       border-radius: 8px;
       padding: 12px;
       margin: 10px auto;
-      width: 80%;
+      width: 90%;
       font-size: 1rem;
       font-weight: bold;
       cursor: pointer;
       transition: background 0.3s ease, transform 0.2s ease;
+      box-shadow: 0px 4px 10px var(--shadow-color);
     }
 
     .button:hover {
@@ -104,17 +119,18 @@
     }
 
     .button img {
-      width: 20px;
-      margin-right: 8px;
+      width: 24px;
+      margin-right: 10px;
     }
 
     .footer {
       margin-top: 20px;
       font-size: 0.9rem;
+      color: var(--text-color);
     }
 
     .footer a {
-      color: var(--accent-color);
+      color: var(--hover-color);
       text-decoration: none;
     }
 
@@ -125,7 +141,7 @@
     @keyframes fadeIn {
       from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(20px);
       }
       to {
         opacity: 1;
@@ -148,7 +164,10 @@
         <img src="https://pluspng.com/img-png/google-logo-png-open-2000.png" alt="Google">
         Logga in med Google
       </button>
-      <button class="button" onclick="nextStep(2)">Skapa ett Google-konto</button>
+      <button class="button" onclick="nextStep(2)">
+        <img src="https://pluspng.com/img-png/google-logo-png-open-2000.png" alt="Google">
+        Skapa ett Google-konto
+      </button>
     </div>
 
     <div class="content" id="step-2">
