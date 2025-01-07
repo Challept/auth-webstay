@@ -6,24 +6,23 @@
   <title>Webstay Auth | Logga in</title>
   <style>
     :root {
-      --background-color: #e0f2fe;
-      --primary-color: #2563eb;
-      --secondary-color: #1e40af;
-      --text-color: #1e293b;
-      --button-color: #3b82f6;
+      --background-color: #edf2fb;
+      --primary-color: #4a90e2;
+      --accent-color: #2563eb;
+      --text-color: #2d3748;
+      --button-background: #4a90e2;
       --button-hover: #1d4ed8;
       --step-inactive: #cbd5e1;
       --step-active: #2563eb;
-      --shadow-color: rgba(0, 0, 0, 0.1);
-      --border-color: rgba(0, 0, 0, 0.2);
-      --card-color: #f8fafc;
+      --card-color: #ffffff;
+      --shadow-color: rgba(0, 0, 0, 0.15);
     }
 
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      font-family: "Roboto", Arial, sans-serif;
     }
 
     body {
@@ -36,42 +35,37 @@
     }
 
     .container {
-      width: 100%;
-      max-width: 450px;
-      padding: 25px;
+      width: 90%;
+      max-width: 480px;
+      padding: 20px;
       border-radius: 12px;
       background: var(--card-color);
-      box-shadow: 0px 8px 24px var(--shadow-color);
+      box-shadow: 0px 10px 20px var(--shadow-color);
       text-align: center;
-      border: 2px solid var(--border-color);
-      animation: slideIn 0.7s ease-out;
     }
 
     h1 {
-      font-size: 1.8rem;
+      font-size: 2rem;
       margin-bottom: 1.5rem;
       color: var(--primary-color);
     }
 
     .step-container {
       display: flex;
-      justify-content: space-around;
-      align-items: center;
+      justify-content: space-between;
       margin-bottom: 20px;
     }
 
     .step {
-      width: 35px;
-      height: 35px;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
       background: var(--step-inactive);
       display: flex;
-      justify-content: center;
       align-items: center;
-      font-size: 1rem;
-      color: white;
+      justify-content: center;
       font-weight: bold;
-      transition: background 0.3s ease;
+      color: white;
     }
 
     .step.active {
@@ -80,7 +74,7 @@
 
     .content {
       display: none;
-      animation: fadeIn 0.5s forwards;
+      animation: fadeIn 0.3s ease-out;
     }
 
     .content.active {
@@ -91,28 +85,27 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: var(--button-color);
-      color: white;
+      background: var(--button-background);
+      color: #ffffff;
       border: none;
       border-radius: 8px;
-      padding: 14px;
+      padding: 12px;
+      margin: 10px auto;
+      width: 80%;
       font-size: 1rem;
       font-weight: bold;
       cursor: pointer;
-      margin: 12px auto;
-      width: 100%;
-      transition: background 0.3s, transform 0.2s;
-      box-shadow: 0px 5px 15px var(--shadow-color);
+      transition: background 0.3s ease, transform 0.2s ease;
     }
 
     .button:hover {
       background: var(--button-hover);
-      transform: scale(1.05);
+      transform: translateY(-2px);
     }
 
     .button img {
-      width: 22px;
-      margin-right: 10px;
+      width: 20px;
+      margin-right: 8px;
     }
 
     .footer {
@@ -121,7 +114,7 @@
     }
 
     .footer a {
-      color: var(--primary-color);
+      color: var(--accent-color);
       text-decoration: none;
     }
 
@@ -132,18 +125,7 @@
     @keyframes fadeIn {
       from {
         opacity: 0;
-        transform: translateY(-10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes slideIn {
-      from {
-        opacity: 0;
-        transform: translateY(50px);
+        transform: translateY(10px);
       }
       to {
         opacity: 1;
@@ -156,21 +138,21 @@
   <div class="container">
     <h1>Välkommen till Webstay Auth</h1>
     <div class="step-container">
-      <div class="step active" data-step="1">1</div>
-      <div class="step" data-step="2">2</div>
+      <div class="step active">1</div>
+      <div class="step">2</div>
     </div>
 
     <div class="content active" id="step-1">
-      <p>Har du ett Google-konto? Logga in för att komma igång!</p>
+      <p>Har du ett Google-konto? Logga in nedan:</p>
       <button class="button" onclick="window.location.href='/google_login'">
         <img src="https://pluspng.com/img-png/google-logo-png-open-2000.png" alt="Google">
         Logga in med Google
       </button>
-      <button class="button" onclick="nextStep(2)">Nej, jag behöver skapa ett konto</button>
+      <button class="button" onclick="nextStep(2)">Skapa ett Google-konto</button>
     </div>
 
     <div class="content" id="step-2">
-      <p>Skapa ett nytt Google-konto genom att klicka på knappen nedan:</p>
+      <p>Skapa ett nytt Google-konto:</p>
       <button class="button" onclick="window.open('https://accounts.google.com/signup', '_blank')">
         <img src="https://pluspng.com/img-png/google-logo-png-open-2000.png" alt="Google">
         Skapa Google-konto
@@ -185,23 +167,12 @@
 
   <script>
     function nextStep(step) {
-      const steps = document.querySelectorAll('.step');
-      const contents = document.querySelectorAll('.content');
-
-      steps.forEach((s, index) => {
-        if (index + 1 === step) {
-          s.classList.add('active');
-        } else {
-          s.classList.remove('active');
-        }
+      document.querySelectorAll('.step').forEach((stepElem, index) => {
+        stepElem.classList.toggle('active', index === step - 1);
       });
 
-      contents.forEach((content, index) => {
-        if (index + 1 === step) {
-          content.classList.add('active');
-        } else {
-          content.classList.remove('active');
-        }
+      document.querySelectorAll('.content').forEach((contentElem, index) => {
+        contentElem.classList.toggle('active', index === step - 1);
       });
     }
   </script>
