@@ -6,15 +6,17 @@
   <title>Webstay Auth | Logga in</title>
   <style>
     :root {
-      --background-color: #f9fafb;
+      --background-color: #e0f2fe;
       --primary-color: #2563eb;
-      --text-color: #1f2937;
-      --button-color: #2563eb;
+      --secondary-color: #1e40af;
+      --text-color: #1e293b;
+      --button-color: #3b82f6;
       --button-hover: #1d4ed8;
-      --step-color: #93c5fd;
+      --step-inactive: #cbd5e1;
       --step-active: #2563eb;
       --shadow-color: rgba(0, 0, 0, 0.1);
       --border-color: rgba(0, 0, 0, 0.2);
+      --card-color: #f8fafc;
     }
 
     * {
@@ -35,39 +37,41 @@
 
     .container {
       width: 100%;
-      max-width: 400px;
-      padding: 20px;
-      border-radius: 10px;
-      background: white;
-      box-shadow: 0 10px 20px var(--shadow-color);
+      max-width: 450px;
+      padding: 25px;
+      border-radius: 12px;
+      background: var(--card-color);
+      box-shadow: 0px 8px 24px var(--shadow-color);
+      text-align: center;
+      border: 2px solid var(--border-color);
+      animation: slideIn 0.7s ease-out;
     }
 
     h1 {
-      font-size: 1.6rem;
+      font-size: 1.8rem;
       margin-bottom: 1.5rem;
-      text-align: center;
       color: var(--primary-color);
     }
 
     .step-container {
       display: flex;
-      justify-content: space-between;
+      justify-content: space-around;
       align-items: center;
       margin-bottom: 20px;
     }
 
     .step {
-      width: 30px;
-      height: 30px;
+      width: 35px;
+      height: 35px;
       border-radius: 50%;
-      background: var(--step-color);
+      background: var(--step-inactive);
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 0.9rem;
+      font-size: 1rem;
       color: white;
       font-weight: bold;
-      transition: background 0.3s;
+      transition: background 0.3s ease;
     }
 
     .step.active {
@@ -90,28 +94,28 @@
       background: var(--button-color);
       color: white;
       border: none;
-      border-radius: 5px;
-      padding: 12px;
+      border-radius: 8px;
+      padding: 14px;
       font-size: 1rem;
       font-weight: bold;
       cursor: pointer;
-      margin: 15px 0;
+      margin: 12px auto;
       width: 100%;
       transition: background 0.3s, transform 0.2s;
+      box-shadow: 0px 5px 15px var(--shadow-color);
     }
 
     .button:hover {
       background: var(--button-hover);
-      transform: scale(1.03);
+      transform: scale(1.05);
     }
 
     .button img {
-      width: 20px;
+      width: 22px;
       margin-right: 10px;
     }
 
     .footer {
-      text-align: center;
       margin-top: 20px;
       font-size: 0.9rem;
     }
@@ -129,6 +133,17 @@
       from {
         opacity: 0;
         transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
       }
       to {
         opacity: 1;
