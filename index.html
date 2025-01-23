@@ -1,248 +1,218 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Webstay Auth</title>
-  <style>
-    :root {
-      --background-color: #f0f8ff;
-      --primary-color: #1a73e8;
-      --accent-color: #5c9ded;
-      --hover-color: #87b3f7;
-      --text-color: #333;
-      --button-color: #ffffff;
-      --button-text: #000000;
-      --card-background: #ffffff;
-      --shadow-color: rgba(0, 0, 0, 0.2);
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webstay - Logga In</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #2c3e50;
+        }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: "Roboto", sans-serif;
-    }
+        .container {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
 
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background: var(--background-color);
-      color: var(--text-color);
-    }
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        }
 
-    .container {
-      width: 95%;
-      max-width: 450px;
-      padding: 30px;
-      border-radius: 15px;
-      background: var(--card-background);
-      box-shadow: 0px 6px 15px var(--shadow-color);
-      text-align: center;
-      animation: fadeIn 0.8s ease-out;
-    }
+        h2 {
+            color: #3498db;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
 
-    h1 {
-      font-size: 1.6rem;
-      margin-bottom: 1rem;
-      font-weight: bold;
-      color: var(--primary-color);
-    }
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
 
-    .accounts {
-      margin-bottom: 20px;
-      max-height: 200px;
-      overflow-y: auto;
-      padding-right: 5px;
-    }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2980b9;
+            font-weight: 500;
+        }
 
-    .account {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--background-color);
-      padding: 12px 18px;
-      border-radius: 10px;
-      margin-bottom: 12px;
-      box-shadow: 0px 3px 10px var(--shadow-color);
-      cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
 
-    .account:hover {
-      transform: translateY(-3px);
-      box-shadow: 0px 6px 12px var(--shadow-color);
-    }
+        .form-group input:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.1);
+        }
 
-    .account span {
-      font-size: 1rem;
-      color: var(--text-color);
-    }
+        .button {
+            width: 100%;
+            padding: 14px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    .account .remove {
-      color: var(--primary-color);
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: color 0.3s ease;
-    }
+        .button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
 
-    .account .remove:hover {
-      color: var(--hover-color);
-    }
+        .button img {
+            margin-right: 10px;
+            width: 24px;
+            height: 24px;
+        }
 
-    .button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--primary-color);
-      color: var(--button-color);
-      border: none;
-      border-radius: 10px;
-      padding: 14px 20px;
-      margin: 12px auto;
-      width: 90%;
-      font-size: 1rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.3s ease, transform 0.2s ease;
-      box-shadow: 0px 4px 12px var(--shadow-color);
-    }
+        .error-alert {
+            color: #e74c3c;
+            margin-bottom: 15px;
+            height: 20px;
+        }
 
-    .button:hover {
-      background: var(--hover-color);
-      transform: translateY(-2px);
-    }
+        .google-button {
+            background-color: white;
+            border: 2px solid #e0e0e0;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    .button img {
-      width: 20px;
-      margin-right: 10px;
-    }
-
-    .footer {
-      margin-top: 20px;
-      font-size: 0.9rem;
-      color: var(--text-color);
-    }
-
-    .footer a {
-      color: var(--accent-color);
-      text-decoration: none;
-    }
-
-    .footer a:hover {
-      text-decoration: underline;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-  </style>
+        .google-button:hover {
+            background-color: #f1f3f4;
+            border-color: #3498db;
+        }
+    </style>
 </head>
 <body>
-  <div class="container" id="screen1">
-    <h1>Välj ett konto</h1>
-
-    <div class="accounts" id="accountsList">
-      <p id="noAccountsMessage" style="display: none;">Inga tidigare konton hittades.</p>
+    <div class="container">
+        <h2>Webstay Inloggning</h2>
+        <div id="errorAlert" class="error-alert"></div>
+        <div class="form-group">
+            <label for="email">E-post</label>
+            <input type="email" id="email" placeholder="Ange din e-post" required />
+        </div>
+        <div class="form-group">
+            <label for="password">Lösenord</label>
+            <input type="password" id="password" placeholder="Ange ditt lösenord" required />
+        </div>
+        <button id="signupButton" class="button">Logga In / Registrera</button>
+        <button id="googleLogin" class="button google-button">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" />
+            Logga In med Google
+        </button>
     </div>
 
-    <button class="button" onclick="switchToLogin()">Hittar du inte ditt konto?</button>
-  </div>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js"></script>
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCy6R-hjSuh75T7-CilDNqhVln0KgtlqNU",
+            authDomain: "webstay-auth.firebaseapp.com",
+            projectId: "webstay-auth",
+            storageBucket: "webstay-auth.firebasestorage.app",
+            messagingSenderId: "970884987941",
+            appId: "1:970884987941:web:99ec8fbc679a79810cd3cc"
+        };
 
-  <div class="container hidden" id="screen2">
-    <h1>Logga in eller Skapa konto</h1>
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
 
-    <button class="button" onclick="window.location.href='/google_login'">
-      <img src="https://pluspng.com/img-png/google-logo-png-open-2000.png" alt="Google">
-      Logga in med Google
-    </button>
+        // DOM Elements
+        const errorAlert = document.getElementById("errorAlert");
+        const signupButton = document.getElementById("signupButton");
+        const googleLogin = document.getElementById("googleLogin");
+        const emailInput = document.getElementById("email");
+        const passwordInput = document.getElementById("password");
 
-    <button class="button" onclick="window.open('https://accounts.google.com/signup', '_blank')">
-      <img src="https://pluspng.com/img-png/google-logo-png-open-2000.png" alt="Google">
-      Skapa ett Google-konto
-    </button>
+        // Login/Register Handler
+        signupButton.addEventListener("click", async () => {
+            const email = emailInput.value;
+            const password = passwordInput.value;
 
-    <button class="button" onclick="switchToAccounts()">Tillbaka</button>
+            if (!email || !password) {
+                errorAlert.textContent = "Alla fält är obligatoriska.";
+                return;
+            }
 
-    <div class="footer">
-      <p>Behöver du hjälp? <a href="mailto:support@webstay.se">Kontakta support</a>.</p>
-    </div>
-  </div>
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+                handleSuccess("Inloggning lyckades!");
+            } catch (error) {
+                if (error.code === 'auth/user-not-found') {
+                    try {
+                        await auth.createUserWithEmailAndPassword(email, password);
+                        const verificationCode = generateVerificationCode();
+                        const userCode = prompt(`Verifieringskod: ${verificationCode}`);
+                        
+                        if (userCode === verificationCode) {
+                            handleSuccess("Registrering lyckades!");
+                        } else {
+                            throw new Error("Felaktig verifieringskod.");
+                        }
+                    } catch (signupError) {
+                        errorAlert.textContent = signupError.message;
+                    }
+                } else {
+                    errorAlert.textContent = error.message;
+                }
+            }
+        });
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const accountsList = document.getElementById('accountsList');
-      const noAccountsMessage = document.getElementById('noAccountsMessage');
+        // Google Login Handler
+        googleLogin.addEventListener("click", async () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            try {
+                await auth.signInWithPopup(provider);
+                handleSuccess("Google-inloggning lyckades!");
+            } catch (error) {
+                errorAlert.textContent = error.message;
+            }
+        });
 
-      const savedAccounts = JSON.parse(localStorage.getItem('webstayAccounts')) || [];
-
-      function renderAccounts() {
-        accountsList.innerHTML = '';
-
-        if (savedAccounts.length === 0) {
-          noAccountsMessage.style.display = 'block';
-        } else {
-          noAccountsMessage.style.display = 'none';
-
-          savedAccounts.forEach((account, index) => {
-            const accountDiv = document.createElement('div');
-            accountDiv.className = 'account';
-            accountDiv.onclick = () => loginWithAccount(account);
-
-            const accountName = document.createElement('span');
-            accountName.textContent = account.email;
-
-            const removeButton = document.createElement('span');
-            removeButton.className = 'remove';
-            removeButton.textContent = 'Ta bort';
-            removeButton.onclick = (e) => {
-              e.stopPropagation();
-              removeAccount(index);
-            };
-
-            accountDiv.appendChild(accountName);
-            accountDiv.appendChild(removeButton);
-            accountsList.appendChild(accountDiv);
-          });
+        // Success Handler
+        function handleSuccess(message) {
+            alert(message);
+            window.close();
         }
-      }
 
-      function removeAccount(index) {
-        savedAccounts.splice(index, 1);
-        localStorage.setItem('webstayAccounts', JSON.stringify(savedAccounts));
-        renderAccounts();
-      }
-
-      function loginWithAccount(account) {
-        alert(`Loggar in med ${account.email}`);
-        // Redirect or handle login logic
-      }
-
-      renderAccounts();
-    });
-
-    function switchToLogin() {
-      document.getElementById('screen1').classList.add('hidden');
-      document.getElementById('screen2').classList.remove('hidden');
-    }
-
-    function switchToAccounts() {
-      document.getElementById('screen2').classList.add('hidden');
-      document.getElementById('screen1').classList.remove('hidden');
-    }
-  </script>
+        // Generate Verification Code
+        function generateVerificationCode() {
+            return Math.random().toString().slice(2, 8);
+        }
+    </script>
 </body>
 </html>
