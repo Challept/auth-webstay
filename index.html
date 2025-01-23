@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Webstay - Logga In</title>
+    <title>Webstay - Säker Inloggning</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
@@ -11,7 +11,7 @@
         body {
             margin: 0;
             font-family: 'Inter', sans-serif;
-            background-color: #f4f7f6;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -22,17 +22,17 @@
         .container {
             background-color: white;
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
             padding: 40px;
             width: 100%;
-            max-width: 400px;
+            max-width: 450px;
             text-align: center;
             transition: all 0.3s ease;
         }
 
         .container:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
         }
 
         h2 {
@@ -60,7 +60,6 @@
             border-radius: 10px;
             background-color: #f9f9f9;
             transition: all 0.3s ease;
-            font-family: 'Inter', sans-serif;
         }
 
         .form-group input:focus {
@@ -90,6 +89,17 @@
             transform: translateY(-2px);
         }
 
+        .button-google {
+            background-color: white;
+            color: #2c3e50;
+            border: 2px solid #e0e0e0;
+        }
+
+        .button-google:hover {
+            background-color: #f1f3f4;
+            border-color: #3498db;
+        }
+
         .button img {
             margin-right: 10px;
             width: 24px;
@@ -100,26 +110,18 @@
             color: #e74c3c;
             margin-bottom: 15px;
             height: 20px;
+            text-align: center;
         }
 
-        .google-button {
-            background-color: white;
-            border: 2px solid #e0e0e0;
-            color: #2c3e50;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .google-button:hover {
-            background-color: #f1f3f4;
-            border-color: #3498db;
+        .verification-message {
+            color: #27ae60;
+            margin-top: 15px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>Webstay Inloggning</h2>
+        <h2>Webstay Säker Inloggning</h2>
         <div id="errorAlert" class="error-alert"></div>
         <div class="form-group">
             <label for="email">E-post</label>
@@ -130,14 +132,12 @@
             <input type="password" id="password" placeholder="Ange ditt lösenord" required />
         </div>
         <button id="signupButton" class="button">Logga In / Registrera</button>
-        <button id="googleLogin" class="button google-button">
+        <button id="googleLogin" class="button button-google">
             <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" />
             Logga In med Google
         </button>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js"></script>
     <script>
         // Firebase Configuration
         const firebaseConfig = {
@@ -160,8 +160,25 @@
         const emailInput = document.getElementById("email");
         const passwordInput = document.getElementById("password");
 
+        // Email Validation Handler
+        function validateEmailVerification(user) {
+            if (!user.emailVerified) {
+                // Send verification email if not verified
+                user.sendEmailVerification()
+                    .then(() => {
+                        errorAlert.textContent = "Verifiera din e-post. En verifieringslänk har skickats!";
+                        auth.signOut();
+                    })
+                    .catch((error) => {
+                        errorAlert.textContent = "Kunde inte skicka verifieringsepost: " + error.message;
+                    });
+                return false;
+            }
+            return true;
+        }
+
         // Login/Register Handler
-        signupButton.addEventListener("click", async () => {
+        signupButton.addEventListener("click", () => {
             const email = emailInput.value;
             const password = passwordInput.value;
 
@@ -170,51 +187,53 @@
                 return;
             }
 
-            try {
-                await auth.signInWithEmailAndPassword(email, password);
-                handleSuccess("Inloggning lyckades!");
-            } catch (error) {
-                if (error.code === 'auth/user-not-found') {
-                    try {
-                        await auth.createUserWithEmailAndPassword(email, password);
-                        const verificationCode = generateVerificationCode();
-                        const userCode = prompt(`Verifieringskod: ${verificationCode}`);
-                        
-                        if (userCode === verificationCode) {
-                            handleSuccess("Registrering lyckades!");
-                        } else {
-                            throw new Error("Felaktig verifieringskod.");
-                        }
-                    } catch (signupError) {
-                        errorAlert.textContent = signupError.message;
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    if (validateEmailVerification(userCredential.user)) {
+                        alert("Inloggning lyckades!");
+                        window.close();
                     }
-                } else {
-                    errorAlert.textContent = error.message;
-                }
-            }
+                })
+                .catch((error) => {
+                    if (error.code === 'auth/user-not-found') {
+                        auth.createUserWithEmailAndPassword(email, password)
+                            .then((userCredential) => {
+                                const user = userCredential.user;
+                                user.sendEmailVerification()
+                                    .then(() => {
+                                        errorAlert.textContent = "Registrering lyckades! Kontrollera din e-post för verifiering.";
+                                        auth.signOut();
+                                    });
+                            })
+                            .catch((signupError) => {
+                                errorAlert.textContent = signupError.message;
+                            });
+                    } else {
+                        errorAlert.textContent = error.message;
+                    }
+                });
         });
 
         // Google Login Handler
-        googleLogin.addEventListener("click", async () => {
+        googleLogin.addEventListener("click", () => {
             const provider = new firebase.auth.GoogleAuthProvider();
-            try {
-                await auth.signInWithPopup(provider);
-                handleSuccess("Google-inloggning lyckades!");
-            } catch (error) {
-                errorAlert.textContent = error.message;
-            }
+            provider.setCustomParameters({
+                'prompt': 'select_account'
+            });
+
+            auth.signInWithPopup(provider)
+                .then((result) => {
+                    const user = result.user;
+                    if (validateEmailVerification(user)) {
+                        alert("Google-inloggning lyckades!");
+                        window.close();
+                    }
+                })
+                .catch((error) => {
+                    errorAlert.textContent = error.message;
+                });
         });
-
-        // Success Handler
-        function handleSuccess(message) {
-            alert(message);
-            window.close();
-        }
-
-        // Generate Verification Code
-        function generateVerificationCode() {
-            return Math.random().toString().slice(2, 8);
-        }
     </script>
 </body>
+</html>
 </html>
